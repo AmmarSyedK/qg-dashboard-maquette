@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QG — Maquette dashboard équipe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0d0c; --panel:#141614; --panel2:#1a1d1a; --line:#262a26; --line2:#323732;
+  --ink:#ecefe9; --muted:#9aa197; --dim:#6b7268;
+  --acc:#c6f36b; --acc-ink:#11140c; --warn:#f2b84b; --bad:#f06b5b; --ok:#6fd38a; --info:#7cc4f2;
+  --r:10px; --mono:"Geist Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 "Geist",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+.banner{background:var(--acc);color:var(--acc-ink);font-size:12.5px;font-weight:600;padding:6px 16px;text-align:center}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:calc(100vh - 31px)}
+/* sidebar */
+.side{border-right:1px solid var(--line);padding:16px 10px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:calc(100vh - 31px);overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 10px 16px}
+.logo{width:28px;height:28px;border-radius:7px;background:var(--acc);color:var(--acc-ink);display:grid;place-items:center;font-weight:700;font-size:13px}
+.brand b{font-size:15px}.brand small{display:block;color:var(--dim);font-size:11.5px}
+.navlabel{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);padding:14px 10px 6px}
+.nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:0;background:none;text-align:left;width:100%;color:var(--muted);min-height:36px}
+.nav:hover{background:var(--panel);color:var(--ink)}
+.nav.on{background:var(--panel2);color:var(--ink)}
+.nav .dot{width:7px;height:7px;border-radius:50%;background:var(--line2);flex:none}
+.nav.on .dot{background:var(--acc)}
+.nav .count{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.me{margin-top:auto;border-top:1px solid var(--line);padding:12px 10px 0;display:flex;gap:10px;align-items:center;font-size:13px}
+.av{width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center;font-size:11px;font-weight:600}
+/* main */
+main{padding:26px 32px 60px;max-width:1240px;width:100%}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+h1{font-size:22px;margin:0;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--muted);margin-top:4px}
+.btn{border:1px solid var(--line2);background:var(--panel);padding:8px 13px;border-radius:8px;min-height:36px}
+.btn:hover{border-color:var(--dim)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1.4fr 1fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card h3{margin:0 0 12px;font-size:13px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.card h3 a{font-weight:500;color:var(--dim);text-decoration:none;font-size:12.5px;cursor:pointer}
+.card h3 a:hover{color:var(--ink)}
+.row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.mono{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.pill{font-size:11.5px;padding:2px 8px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:#2c4a35}.pill.warn{color:var(--warn);border-color:#4d3d1d}
+.pill.bad{color:var(--bad);border-color:#4f2620}.pill.acc{color:var(--acc);border-color:#3f4d22}.pill.info{color:var(--info);border-color:#22404f}
+.light{width:8px;height:8px;border-radius:50%;flex:none}
+.l-ok{background:var(--ok);box-shadow:0 0 0 3px #6fd38a22}.l-warn{background:var(--warn);box-shadow:0 0 0 3px #f2b84b22}.l-bad{background:var(--bad)}
+.k{font-size:24px;font-weight:600;letter-spacing:-.02em}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.spacer{flex:1}
+/* youtube */
+.yt{display:grid;grid-template-columns:1fr 420px;gap:14px;align-items:start}
+.idea{display:grid;grid-template-columns:28px 1fr auto;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:9px;background:var(--panel);cursor:pointer;margin-bottom:8px;text-align:left;width:100%}
+.idea:hover{border-color:var(--line2)}
+.idea.sel{border-color:var(--acc);background:#161a12}
+.idea .n{font-family:var(--mono);color:var(--dim);font-size:13px;padding-top:1px}
+.idea b{font-weight:600;display:block;margin-bottom:3px}
+.idea .src{font-size:12.5px;color:var(--dim)}
+.thumb{aspect-ratio:16/9;border-radius:8px;position:relative;overflow:hidden;background:#1c1f1b;display:flex;align-items:flex-end;padding:14px}
+.thumb .t{font-weight:700;font-size:22px;line-height:1.05;text-transform:uppercase;letter-spacing:-.01em;max-width:70%;text-shadow:0 2px 0 #0008}
+.thumb .face{position:absolute;right:-10px;bottom:-10px;width:44%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3a3f38,#1d201c 70%);border:2px solid #0005}
+.thumb .tag{position:absolute;top:12px;left:12px;background:var(--acc);color:var(--acc-ink);font-weight:700;font-size:11px;padding:3px 7px;border-radius:4px}
+.script{font-size:13.5px;color:var(--muted);white-space:pre-line;max-height:260px;overflow:auto;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.script strong{color:var(--ink)}
+.tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;padding:8px 12px;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--ink);border-color:var(--acc)}
+.empty{color:var(--dim);text-align:center;padding:40px 10px;border:1px dashed var(--line2);border-radius:9px}
+/* planning */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px;min-height:220px}
+.day.today{border-color:#3f4d22}
+.day .d{font-size:12px;color:var(--dim);margin-bottom:8px;display:flex;justify-content:space-between}
+.post{border:1px solid var(--line2);border-radius:7px;padding:7px 8px;margin-bottom:6px;font-size:12.5px;background:var(--panel2)}
+.post .net{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em}
+.net-yt{color:#f06b5b}.net-li{color:#7cc4f2}.net-x{color:#ecefe9}.net-ig{color:#f2b84b}.net-tt{color:#c6f36b}
+/* table */
+table{width:100%;border-collapse:collapse}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover td{background:#121412}
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px}
+.stage .k{font-size:20px}
+/* chat */
+.msg{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:10px 0}
+.msg .who{font-weight:600;font-size:13px}.msg .who span{font-weight:400;color:var(--dim);font-family:var(--mono);font-size:11.5px;margin-left:6px}
+.bubble{color:var(--muted);margin-top:2px}
+.bot .av{background:var(--acc);color:var(--acc-ink);border:0}
+/* modal-ish toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;font-weight:500;opacity:0;transition:.2s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.menu-btn{display:none}
+@media (max-width:980px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:31px auto 0 0;width:250px;background:var(--bg);z-index:5;transform:translateX(-100%);transition:.2s}
+  .side.open{transform:none;box-shadow:0 0 0 100vmax #0009}
+  .menu-btn{display:inline-flex}
+  main{padding:18px 16px 60px}
+  .g3,.g2,.yt,.pipe{grid-template-columns:1fr}
+  .week{grid-template-columns:repeat(7,minmax(150px,1fr));overflow-x:auto}
+  table{font-size:13px}
+  .hide-m{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="banner">Maquette de test : données fictives, rien n'est branché</div>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><div class="logo">QG</div><div><b>QG Équipe</b><small>Ammar · Asmar · Arham</small></div></div>
+    <button class="nav on" data-v="home"><span class="dot"></span>Accueil</button>
+    <div class="navlabel">Modules</div>
+    <button class="nav" data-v="youtube"><span class="dot"></span>YouTube<span class="count">5</span></button>
+    <button class="nav" data-v="planning"><span class="dot"></span>Planning posts<span class="count">11</span></button>
+    <button class="nav" data-v="prospects"><span class="dot"></span>Prospects LinkedIn<span class="count">24</span></button>
+    <button class="nav" data-v="equipe"><span class="dot"></span>Équipe (Kazuya)</button>
+    <div class="navlabel">Système</div>
+    <button class="nav" data-v="agents"><span class="dot"></span>Agents</button>
+    <button class="nav" data-v="convs"><span class="dot"></span>Conversations</button>
+    <button class="nav" data-v="crons"><span class="dot"></span>Routines</button>
+    <button class="nav" data-v="models"><span class="dot"></span>Modèle &amp; quota</button>
+    <div class="me"><div class="av">AM</div><div>Ammar<div class="dim" style="font-size:11.5px">admin</div></div></div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ideas=[
+ {t:"Claude Duet : l'agent qui bosse pendant que tu dors",s:"Anthropic · annonce d'hier",score:92,st:"new",hook:"J'ai laissé une IA gérer mes mails pendant 48h.",thumb:"L'IA qui bosse à ta place"},
+ {t:"Les abonnements IA vont-ils tous passer à l'usage ?",s:"Reddit r/ClaudeAI · 2,1k votes",score:84,st:"new",hook:"Ton abonnement à 20 € ne va plus suffire.",thumb:"Fin des forfaits IA ?"},
+ {t:"7 bots Telegram qui font tourner mon business",s:"Idée maison · ton setup",score:88,st:"new",hook:"Voici mon équipe… et aucun n'est humain.",thumb:"Mon équipe de 7 bots"},
+ {t:"Gemini vs Claude vs GPT : qui code le mieux en 2026 ?",s:"Benchmarks publiés ce matin",score:76,st:"new",hook:"J'ai donné le même projet aux 3 IA.",thumb:"Le vrai test"},
+ {t:"Construire un SaaS en un week-end avec un agent",s:"Tendance YouTube FR",score:71,st:"new",hook:"Samedi 9h : zéro ligne de code.",thumb:"SaaS en 48h"}
+];
+const statusLabel={new:["À trier",""],pick:["Choisie","acc"],film:["En tournage","info"],done:["Publiée","ok"]};
+let sel=0;
+
+const posts={
+ 0:[["li","9:00","Post : 7 bots Telegram"],["x","12:30","Thread news IA"]],
+ 1:[["yt","18:00","Vidéo : Claude Duet"],["ig","19:00","Reel extrait"]],
+ 2:[["li","9:00","Carrousel : abonnements IA"]],
+ 3:[["tt","17:00","Short : SaaS en 48h"],["x","12:30","Thread benchmarks"]],
+ 4:[["li","9:00","Retour d'expérience client"],["yt","18:00","Vidéo : Gemini vs Claude"]],
+ 5:[["ig","11:00","Coulisses tournage"]],
+ 6:[]
+};
+const nets={yt:"YouTube",li:"LinkedIn",x:"X",ig:"Instagram",tt:"TikTok"};
+
+const prospects=[
+ ["Sophie Martin","Directrice ops","Atelier Lumen","Message envoyé","info","il y a 2 j"],
+ ["Karim Benali","CEO","BatiNova","A répondu","ok","aujourd'hui"],
+ ["Julie Moreau","Head of Growth","Kelvo","À contacter","","—"],
+ ["Thomas Leroy","Fondateur","Plombix","Relance prévue","warn","demain"],
+ ["Nadia Haddad","COO","Rénov&Co","Rendez-vous","acc","jeu. 14h"],
+ ["Lucas Petit","CTO","Stockr","À contacter","","—"],
+ ["Inès Garcia","Marketing","Fleurs Paris","Message envoyé","info","il y a 4 j"]
+];
+
+const agents=[
+ ["Kazuya","Équipe · routine 20h","ok","en ligne"],
+ ["Idris","Développeur full stack","ok","en ligne"],
+ ["YouTube","Veille IA · idées vidéo","ok","en ligne"],
+ ["LinkedIn","Posts · prospection","warn","attend validation"],
+ ["Rimi","Famille","ok","en ligne"],
+ ["Sung","Shorts · analyses","bad","hors ligne"]
+];
+
+const views={
+home(){return `
+ <div class="head"><div><h1>Bonjour Ammar</h1><div class="sub">Samedi 14 novembre · 3 choses attendent une décision</div></div>
+ <button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="grid g3" style="margin-bottom:14px">
+  ${agentsLights()}
+ </div>
+ <div class="grid g2">
+  <div class="card"><h3>À décider aujourd'hui</h3>
+   <div class="row"><span class="pill acc">YouTube</span><span>5 idées du matin à trier</span><span class="spacer"></span><button class="btn" onclick="go('youtube')">Trier</button></div>
+   <div class="row"><span class="pill warn">LinkedIn</span><span>2 posts attendent ta validation</span><span class="spacer"></span><button class="btn" onclick="go('planning')">Voir</button></div>
+   <div class="row"><span class="pill ok">Prospect</span><span>Karim (BatiNova) a répondu</span><span class="spacer"></span><button class="btn" onclick="go('prospects')">Ouvrir</button></div>
+  </div>
+  <div class="card"><h3>Cette semaine <a onclick="go('planning')">planning →</a></h3>
+   <div class="row"><span class="k">11</span><span class="muted">posts programmés</span></div>
+   <div class="row"><span class="k">2</span><span class="muted">vidéos YouTube prévues</span></div>
+   <div class="row"><span class="k">24</span><span class="muted">prospects dans le suivi, 3 rendez-vous</span></div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>Dernière activité des bots <a onclick="go('convs')">tout voir →</a></h3>
+  ${feed().slice(0,4).join("")}
+ </div>`},
+
+youtube(){
+ const i=ideas[sel];
+ return `
+ <div class="head"><div><h1>YouTube</h1><div class="sub">Idées du jour tirées des news IA · générées à 7h00 par le bot YouTube</div></div>
+ <div style="display:flex;gap:8px"><button class="btn menu-btn" onclick="toggleSide()">Menu</button><button class="btn" onclick="toast('Maquette : le bot relancerait la veille')">Relancer la veille</button></div></div>
+ <div class="tabs"><button class="tab on">Du jour (5)</button><button class="tab" onclick="toast('Maquette')">Choisies (3)</button><button class="tab" onclick="toast('Maquette')">Publiées (18)</button></div>
+ <div class="yt">
+  <div>${ideas.map((x,k)=>`
+   <button class="idea ${k===sel?'sel':''}" onclick="sel=${k};render('youtube')">
+    <span class="n">${k+1}</span>
+    <span><b>${x.t}</b><span class="src">${x.s}</span></span>
+    <span style="text-align:right"><span class="pill ${statusLabel[x.st][1]}">${statusLabel[x.st][0]}</span><div class="mono" style="margin-top:6px">potentiel ${x.score}</div></span>
+   </button>`).join("")}
+  </div>
+  <div class="card">
+   ${i.st==="new"?`
+    <h3>Idée ${sel+1}</h3>
+    <div style="font-weight:600;font-size:16px;margin-bottom:6px">${i.t}</div>
+    <div class="muted" style="margin-bottom:14px">Accroche : « ${i.hook} »</div>
+    <div class="empty">Miniature et script pas encore générés.<br>Ils sont créés seulement pour l'idée choisie, pour économiser le quota.</div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn pri" onclick="pick()">Choisir cette idée</button><button class="btn" onclick="toast('Maquette : idée écartée')">Écarter</button></div>`
+   :`
+    <h3>Idée ${sel+1} · <span class="pill acc">Choisie</span></h3>
+    <div class="thumb"><span class="tag">NOUVEAU</span><div class="face"></div><div class="t">${i.thumb}</div></div>
+    <div style="font-weight:600;font-size:16px;margin-top:12px">${i.t}</div>
+    <div class="script"><strong>Intro (0:00–0:20)</strong>
+« ${i.hook} » Plan serré, puis capture d'écran de l'annonce.
+
+<strong>Contexte (0:20–1:30)</strong>
+Ce qui a été annoncé, pour qui, combien ça coûte. Trois points maximum.
+
+<strong>Démo (1:30–5:00)</strong>
+Test en direct sur un vrai cas : boîte mail, agenda, une tâche concrète.
+
+<strong>Avis (5:00–6:30)</strong>
+Ce qui marche, ce qui coince, pour qui ça vaut le coup.
+
+<strong>Fin</strong>
+Question en commentaire + renvoi vers la vidéo sur les bots Telegram.</div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn pri" onclick="toast('Maquette : envoyé au planning')">Programmer</button><button class="btn" onclick="toast('Maquette : le bot refait la miniature')">Refaire la miniature</button></div>`}
+  </div>
+ </div>`},
+
+planning(){
+ const days=["Lun 16","Mar 17","Mer 18","Jeu 19","Ven 20","Sam 21","Dim 22"];
+ return `
+ <div class="head"><div><h1>Planning des posts</h1><div class="sub">Semaine du 16 au 22 novembre · programmé par les bots, validé par l'équipe</div></div>
+ <div style="display:flex;gap:8px"><button class="btn menu-btn" onclick="toggleSide()">Menu</button><button class="btn">← Semaine</button><button class="btn">Semaine →</button></div></div>
+ <div class="week">${days.map((d,k)=>`
+  <div class="day ${k===0?'today':''}"><div class="d"><span>${d}</span><span>${posts[k].length||''}</span></div>
+   ${posts[k].map(p=>`<div class="post"><div class="net net-${p[0]}">${nets[p[0]]} · ${p[1]}</div>${p[2]}</div>`).join("")||'<div class="dim" style="font-size:12px">Rien de prévu</div>'}
+  </div>`).join("")}
+ </div>
+ <div class="card" style="margin-top:14px"><h3>En attente de validation</h3>
+  <div class="row"><span class="pill info">LinkedIn</span><span>Post : 7 bots Telegram qui font tourner mon business</span><span class="spacer"></span><button class="btn pri" onclick="toast('Maquette : validé')">Valider</button><button class="btn" onclick="toast('Maquette')">Modifier</button></div>
+  <div class="row"><span class="pill info">LinkedIn</span><span>Carrousel : les abonnements IA</span><span class="spacer"></span><button class="btn pri" onclick="toast('Maquette : validé')">Valider</button><button class="btn" onclick="toast('Maquette')">Modifier</button></div>
+ </div>`},
+
+prospects(){return `
+ <div class="head"><div><h1>Prospects LinkedIn</h1><div class="sub">Trouvés et contactés par le bot LinkedIn · chaque message est validé avant l'envoi</div></div>
+ <button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="pipe">
+  <div class="stage"><div class="dim">À contacter</div><div class="k">9</div></div>
+  <div class="stage"><div class="dim">Message envoyé</div><div class="k">8</div></div>
+  <div class="stage"><div class="dim">A répondu</div><div class="k">4</div></div>
+  <div class="stage"><div class="dim">Rendez-vous</div><div class="k">3</div></div>
+ </div>
+ <div class="card" style="padding:4px 6px"><table>
+  <tr><th>Nom</th><th class="hide-m">Poste</th><th>Entreprise</th><th>Statut</th><th class="hide-m">Prochaine action</th></tr>
+  ${prospects.map(p=>`<tr><td><b style="font-weight:500">${p[0]}</b></td><td class="hide-m muted">${p[1]}</td><td>${p[2]}</td><td><span class="pill ${p[4]}">${p[3]}</span></td><td class="hide-m mono">${p[5]}</td></tr>`).join("")}
+ </table></div>`},
+
+equipe(){return `
+ <div class="head"><div><h1>Équipe</h1><div class="sub">Tenu par Kazuya · routine tous les soirs à 20h dans le groupe</div></div>
+ <button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="grid g3" style="margin-bottom:14px">
+  ${[["Ammar","Lancer le bot YouTube","ok","A répondu"],["Asmar","Finir la landing","warn","Bloqué : textes"],["Arham","20 prospects contactés","ok","A répondu"]].map(m=>`
+  <div class="card"><h3>${m[0]} <span class="pill ${m[2]}">${m[3]}</span></h3><div class="dim" style="font-size:12px">Objectif de la semaine</div><div style="margin-top:3px">${m[1]}</div></div>`).join("")}
+ </div>
+ <div class="card"><h3>Journal de vendredi 13 novembre</h3>
+  <div class="row"><b style="width:70px">Ammar</b><span class="muted">A testé Hermes et comparé avec Claude Code. Décision : rester sur Claude Code + Telegram.</span></div>
+  <div class="row"><b style="width:70px">Asmar</b><span class="muted">Maquette de la landing faite. Bloqué sur les textes de la section prix.</span></div>
+  <div class="row"><b style="width:70px">Arham</b><span class="muted">12 messages envoyés, 2 réponses, 1 rendez-vous jeudi.</span></div>
+  <div class="row"><b style="width:70px">Kazuya</b><span class="muted">Priorité de demain : débloquer les textes d'Asmar avant midi.</span></div>
+ </div>`},
+
+agents(){return `
+ <div class="head"><div><h1>Agents</h1><div class="sub">Bots Claude Code connectés à Telegram</div></div><button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="card" style="padding:4px 6px"><table>
+  <tr><th>Bot</th><th>Rôle</th><th>État</th><th class="hide-m">Dernière action</th></tr>
+  ${agents.map((a,k)=>`<tr><td><span style="display:inline-flex;gap:9px;align-items:center"><span class="light l-${a[2]}"></span><b style="font-weight:500">${a[0]}</b></span></td><td class="muted">${a[1]}</td><td><span class="pill ${a[2]}">${a[3]}</span></td><td class="hide-m mono">${["19:58","18:12","07:00","09:01","hier","il y a 3 j"][k]}</td></tr>`).join("")}
+ </table></div>`},
+
+convs(){return `
+ <div class="head"><div><h1>Conversations</h1><div class="sub">Derniers échanges entre l'équipe et les bots</div></div><button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="card">${feed().join("")}</div>`},
+
+crons(){return `
+ <div class="head"><div><h1>Routines</h1><div class="sub">Tâches automatiques des bots</div></div><button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="card" style="padding:4px 6px"><table>
+  <tr><th>Routine</th><th>Bot</th><th>Quand</th><th>Prochain passage</th><th class="hide-m">Dernier résultat</th></tr>
+  <tr><td>Veille news IA → 5 idées</td><td>YouTube</td><td class="mono">tous les jours 7:00</td><td class="mono">demain 7:00</td><td class="hide-m"><span class="pill ok">OK</span></td></tr>
+  <tr><td>Point du soir de l'équipe</td><td>Kazuya</td><td class="mono">tous les jours 20:00</td><td class="mono">aujourd'hui 20:00</td><td class="hide-m"><span class="pill ok">OK</span></td></tr>
+  <tr><td>Recherche de prospects</td><td>LinkedIn</td><td class="mono">lun–ven 8:30</td><td class="mono">lundi 8:30</td><td class="hide-m"><span class="pill ok">OK</span></td></tr>
+  <tr><td>Rétro de la semaine</td><td>Kazuya</td><td class="mono">dimanche 19:00</td><td class="mono">demain 19:00</td><td class="hide-m"><span class="pill ok">OK</span></td></tr>
+  <tr><td>Veille boîte mail</td><td>Idris</td><td class="mono">toutes les 2 h</td><td class="mono">16:00</td><td class="hide-m"><span class="pill warn">1 erreur</span></td></tr>
+ </table></div>`},
+
+models(){return `
+ <div class="head"><div><h1>Modèle &amp; quota</h1><div class="sub">Abonnement utilisé par les bots</div></div><button class="btn menu-btn" onclick="toggleSide()">Menu</button></div>
+ <div class="grid g3">
+  <div class="card"><h3>Abonnement</h3><div class="k">Claude Max 20x</div><div class="muted">sur le VPS · une seule connexion</div></div>
+  <div class="card"><h3>Fenêtre de 5 h</h3><div class="k">23 %</div>${bar(23)}<div class="dim" style="margin-top:6px">se réinitialise à 17:40</div></div>
+  <div class="card"><h3>Semaine</h3><div class="k">41 %</div>${bar(41)}<div class="dim" style="margin-top:6px">57 % de la semaine écoulée · dans les clous</div></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>Modèle par tâche</h3>
+  <div class="row"><span>Conversations avec l'équipe</span><span class="spacer"></span><span class="pill acc">Opus</span></div>
+  <div class="row"><span>Veille et idées du matin</span><span class="spacer"></span><span class="pill">Sonnet</span></div>
+  <div class="row"><span>Résumés et journaux</span><span class="spacer"></span><span class="pill">Haiku</span></div>
+  <div class="row"><span>Repli si Claude indisponible</span><span class="spacer"></span><span class="pill warn">à configurer</span></div>
+ </div>`}
+};
+
+function bar(p){return `<div style="height:6px;background:var(--panel2);border-radius:9px;margin-top:10px;overflow:hidden"><div style="width:${p}%;height:100%;background:var(--acc)"></div></div>`}
+function agentsLights(){return agents.slice(0,3).map(a=>`<div class="card" style="display:flex;align-items:center;gap:12px"><span class="light l-${a[2]}"></span><div><b style="font-weight:600">${a[0]}</b><div class="dim" style="font-size:12.5px">${a[1]}</div></div><span class="spacer"></span><span class="pill ${a[2]}">${a[3]}</span></div>`).join("")}
+function feed(){
+ const f=[["YouTube",1,"07:00","5 idées du jour postées dans le sujet YouTube."],["Ammar",0,"07:14","Prends la 3, et fais une miniature plus simple."],["YouTube",1,"07:16","Idée 3 choisie : miniature et script prêts."],["Arham",0,"09:02","Valide les 2 posts LinkedIn de demain."],["LinkedIn",1,"09:03","2 posts programmés lundi et mercredi à 9h."],["Kazuya",1,"19:58","Point du soir : qu'avez-vous fait aujourd'hui ?"]];
+ return f.map(m=>`<div class="msg ${m[1]?'bot':''}"><div class="av">${m[0].slice(0,2)}</div><div><div class="who">${m[0]}<span>${m[2]}</span></div><div class="bubble">${m[3]}</div></div></div>`);
+}
+function pick(){ideas[sel].st="pick";render("youtube");toast("Idée choisie : le bot génère miniature et script")}
+let cur="home";
+function render(v){cur=v;document.getElementById("main").innerHTML=views[v]();document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("on",n.dataset.v===v));window.scrollTo(0,0)}
+function go(v){render(v);location.hash=v;document.getElementById("side").classList.remove("open")}
+function toggleSide(){document.getElementById("side").classList.toggle("open")}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2200)}
+document.querySelectorAll(".nav").forEach(n=>n.onclick=()=>go(n.dataset.v));
+ideas[2].st="pick";
+render(views[location.hash.slice(1)]?location.hash.slice(1):"home");
+</script>
+</body>
+</html>
